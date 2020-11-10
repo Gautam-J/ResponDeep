@@ -2,21 +2,18 @@ import os
 import cv2
 import time
 import argparse
+from utils import getNumberOfPNGInDirectory
 
 
 def getArgs():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--label', type=str, default='background',
-                        help='Label of the data to be saved')
+                        help='Label of the data to be saved. Defaults to "background"')
 
     args = parser.parse_args()
 
     return args
-
-
-def getNumberOfPNGInDirectory(directory):
-    return len([i for i in os.listdir(directory) if i.endswith('.png')])
 
 
 args = getArgs()
