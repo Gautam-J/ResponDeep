@@ -1,4 +1,5 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 
 def getTrainDatagen():
@@ -6,14 +7,14 @@ def getTrainDatagen():
         rotation_range=10,
         zoom_range=0.2,
         horizontal_flip=True,
-        rescale=1 / 255.,
         width_shift_range=0.1,
         height_shift_range=0.1,
-        validation_split=0.2)
+        validation_split=0.2,
+        preprocessing_function=preprocess_input)
 
 
 def getTestDatagen():
-    return ImageDataGenerator(rescale=1 / 255.)
+    return ImageDataGenerator(preprocessing_function=preprocess_input)
 
 
 def getTrainGenerator(directory, target_size, batch_size):
@@ -24,7 +25,7 @@ def getTrainGenerator(directory, target_size, batch_size):
     trainGenerator = trainDatagen.flow_from_directory(
         directory=directory,
         target_size=target_size,
-        color_mode='grayscale',
+        color_mode='rgb',
         class_mode='categorical',
         batch_size=batch_size,
         shuffle=True,
@@ -39,7 +40,7 @@ def getValGenerator(directory, target_size, batch_size):
     valGenerator = trainDatagen.flow_from_directory(
         directory=directory,
         target_size=target_size,
-        color_mode='grayscale',
+        color_mode='rgb',
         class_mode='categorical',
         batch_size=batch_size,
         shuffle=True,
@@ -55,7 +56,7 @@ def getTestGenerator(directory, target_size, batch_size):
     testGenerator = testDatagen.flow_from_directory(
         directory=directory,
         target_size=target_size,
-        color_mode='grayscale',
+        color_mode='rgb',
         class_mode='categorical',
         batch_size=batch_size)
 

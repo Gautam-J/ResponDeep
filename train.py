@@ -16,10 +16,10 @@ baseDir = createBaseDir()
 trainDir = os.path.join('data', 'train')
 testDir = os.path.join('data', 'validation')
 
-batchSize = 32
-nEpochs = 3
-imgHeight = 50
-imgWidth = 50
+batchSize = 8
+nEpochs = 10
+imgHeight = 224
+imgWidth = 224
 
 trainGenerator = getTrainGenerator(trainDir,
                                    (imgWidth, imgHeight),
@@ -34,7 +34,7 @@ testGenerator = getTestGenerator(testDir,
                                  batchSize)
 
 nClasses = getNumberOfClasses(trainDir)
-model = buildModel(input_shape=(imgWidth, imgHeight, 1), n_classes=nClasses)
+model = buildModel(input_shape=(imgWidth, imgHeight, 3), n_classes=nClasses)
 
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
