@@ -1,55 +1,25 @@
-from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Dropout, BatchNormalization
-from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, ReLU, GlobalMaxPool2D
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.callbacks import (EarlyStopping,
                                         ModelCheckpoint,
                                         ReduceLROnPlateau)
 
 
 def buildModel(input_shape, n_classes):
-    model = Sequential()
+    baseModel = MobileNetV2(input_shape=input_shape,
+                            weights='imagenet',
+                            include_top=False,
+                            pooling='avg')
 
-    model.add(Conv2D(32, (3, 3), strides=1, padding='same', input_shape=input_shape))
-    model.add(BatchNormalization())
-    model.add(ReLU())
+    baseModel.trainable = False
 
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
+    inputs = Input(input_shape)
+    x = baseModel(inputs)
+    x = Dense(512, activation='relu')(x)
+    outputs = Dense(n_classes, activation='softmax')(x)
 
-    model.add(Conv2D(64, (3, 3), strides=1, padding='same'))
-    model.add(BatchNormalization())
-    model.add(ReLU())
-
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-    model.add(Dropout(0.1))
-
-    model.add(Conv2D(64, (3, 3), strides=1, padding='same'))
-    model.add(BatchNormalization())
-    model.add(ReLU())
-
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-
-    model.add(Conv2D(128, (3, 3), strides=1, padding='same'))
-    model.add(BatchNormalization())
-    model.add(ReLU())
-
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(256, (3, 3), strides=1, padding='same'))
-    model.add(BatchNormalization())
-    model.add(ReLU())
-
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-    model.add(Dropout(0.2))
-
-    model.add(GlobalMaxPool2D())
-
-    model.add(Dense(128))
-    model.add(ReLU())
-
-    model.add(Dropout(0.2))
-    model.add(Dense(n_classes, activation='softmax'))
-
+    model = Model(inputs, outputs)
     model.summary()
 
     return model
