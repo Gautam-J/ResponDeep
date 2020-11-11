@@ -1,6 +1,5 @@
 import os
 import time
-import pathlib
 
 
 def createBaseDir():
@@ -20,18 +19,13 @@ def getNumberOfClasses(path_to_train_dir):
     return len(list(os.listdir(path_to_train_dir)))
 
 
-def getNumberOfTrainingImages(path_to_train_dir):
-    return len(list(pathlib.Path(path_to_train_dir).glob('*/*.png')))
+def getPathToLatestModel():
+    if not os.path.exists('models'):
+        print('[ERROR] Models directory does not exists')
+        return None
 
+    latestModelDirectory = os.path.join('models', os.listdir('models')[-1])
 
-def getClassWeights(path_to_train_dir):
-    nClasses = getNumberOfClasses(path_to_train_dir)
-    numberOfTrainingImages = getNumberOfTrainingImages(path_to_train_dir)
-    classList = sorted(os.listdir(path_to_train_dir))
-
-    classWeights = {}
-    for sno, className in enumerate(classList):
-        bincount = len(list(os.listdir(os.path.join(path_to_train_dir, className))))
-        classWeights[sno] = numberOfTrainingImages / (nClasses * bincount)
-
-    return classWeights
+    for file in os.listdir(latestModelDirectory):
+        if file.endswith('.h5'):
+            return os.path.join(latestModelDirectory, file)
