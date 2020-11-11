@@ -48,7 +48,7 @@ def buildModel(input_shape, n_classes):
     model.add(ReLU())
 
     model.add(Dropout(0.2))
-    model.add(Dense(n_classes, activation='sigmoid'))
+    model.add(Dense(n_classes, activation='softmax'))
 
     model.summary()
 
