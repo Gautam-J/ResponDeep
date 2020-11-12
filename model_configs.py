@@ -16,7 +16,6 @@ def buildModel(input_shape, n_classes):
 
     inputs = Input(input_shape)
     x = baseModel(inputs)
-    x = Dense(512, activation='relu')(x)
     outputs = Dense(n_classes, activation='softmax')(x)
 
     model = Model(inputs, outputs)
