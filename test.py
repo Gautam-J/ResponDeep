@@ -2,8 +2,11 @@ import cv2
 import time
 import numpy as np
 from tensorflow.keras.models import load_model
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+
 from utils import getPathToLatestModel
+
+pathToModel = getPathToLatestModel()
+model = load_model(pathToModel)
 
 labelIndices = {
     0: 'background',
@@ -12,23 +15,19 @@ labelIndices = {
     3: 'thumbs_up',
 }
 
-pathToModel = getPathToLatestModel()
-print('[INFO] Path to latest model:', pathToModel)
-
-threshold = 0.7
-model = load_model(pathToModel)
 videoCapture = cv2.VideoCapture(0)
-
 while True:
+    # TODO: function to count the frames per second in this loop
     _, frame = videoCapture.read()
     frame = cv2.flip(frame, 1)
 
     image = cv2.resize(frame, (224, 224))
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image.reshape((1, 224, 224, 3))
-    image = preprocess_input(image)
+    image = (image / 127.0) - 1
 
     prediction = model.predict(image)[0]
+
     classIndex = np.argmax(prediction)
     classConfidence = prediction[classIndex] * 100
     classLabel = labelIndices.get(classIndex)
