@@ -2,17 +2,11 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 
-from utils import getPathToLatestModel
+from utils import getPathToLatestModel, getLabelIndices
 
 pathToModel = getPathToLatestModel()
 model = load_model(pathToModel)
-
-labelIndices = {
-    0: 'background',
-    1: 'greet',
-    2: 'thumbs_down',
-    3: 'thumbs_up',
-}
+labelIndices = getLabelIndices()
 
 videoCapture = cv2.VideoCapture(0)
 while True:

@@ -29,3 +29,16 @@ def getPathToLatestModel():
     for file in os.listdir(latestModelDirectory):
         if file.endswith('.h5'):
             return os.path.join(latestModelDirectory, file)
+
+
+def getLabelIndices():
+    labelIndices = dict()
+
+    with open('labels.txt', 'r') as f:
+        lines = f.readlines()
+
+    for line in lines:
+        index, label = line.split()
+        labelIndices[int(index)] = label
+
+    return labelIndices
