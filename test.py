@@ -33,7 +33,7 @@ while True:
     classConfidence = prediction[classIndex] * 100
     classLabel = labelIndices.get(classIndex)
 
-    cv2.putText(frame, f'{classLabel} ({classConfidence:.2f}%)', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    cv2.putText(frame, f'{classLabel} ({classConfidence:.2f}%)', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
     cv2.imshow('ResponDeep', frame)
 
     time.sleep(1 / 24.)
