@@ -1,0 +1,4 @@
+0 background
+1 greet
+2 thumbs_down
+3 thumbs_up
