@@ -1,4 +1,5 @@
 import os
+import cv2
 import time
 
 
@@ -42,3 +43,13 @@ def getLabelIndices():
         labelIndices[int(index)] = label
 
     return labelIndices
+
+
+def loadComicImage(path_to_image, size=(400, 400)):
+    image = cv2.imread(path_to_image, -1)
+    image = cv2.resize(image, size, interpolation=cv2.INTER_AREA)
+
+    if len(image.shape) > 2 and image.shape[2] == 4:
+        image = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
+
+    return image
