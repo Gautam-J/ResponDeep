@@ -14,7 +14,7 @@ yesImage = loadComicImage(os.path.join('comic_images', 'yes.png'))
 noImage = loadComicImage(os.path.join('comic_images', 'no.png'))
 rows, cols, channels = helloImage.shape
 
-alpha = 0.2
+alpha = 0.7
 xOffset = (480 - cols) // 2
 yOffset = (640 - rows) // 2
 
@@ -23,7 +23,10 @@ while True:
     _, frame = videoCapture.read()
     frame = cv2.flip(frame, 1)
 
-    image = cv2.resize(frame, (224, 224))
+    # center crop image
+    croppedFrame = frame[:, 80:560]
+
+    image = cv2.resize(croppedFrame, (224, 224))
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image.reshape((1, 224, 224, 3))
     image = (image / 127.0) - 1
@@ -35,11 +38,11 @@ while True:
     classLabel = labelIndices.get(classIndex)
 
     addedImage = None
-    if classLabel == 'greet':
+    if classLabel == 'greet' and classConfidence > 80:
         addedImage = cv2.addWeighted(frame[xOffset:xOffset + rows, yOffset:yOffset + cols, :], alpha, helloImage[0:rows, 0:cols], 1 - alpha, 0)
-    elif classLabel == 'thumbs_down':
+    elif classLabel == 'thumbs_down' and classConfidence > 80:
         addedImage = cv2.addWeighted(frame[xOffset:xOffset + rows, yOffset:yOffset + cols, :], alpha, noImage[0:rows, 0:cols], 1 - alpha, 0)
-    elif classLabel == 'thumbs_up':
+    elif classLabel == 'thumbs_up' and classConfidence > 80:
         addedImage = cv2.addWeighted(frame[xOffset:xOffset + rows, yOffset:yOffset + cols, :], alpha, yesImage[0:rows, 0:cols], 1 - alpha, 0)
 
     if addedImage is not None:
